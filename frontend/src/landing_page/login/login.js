@@ -9,7 +9,7 @@ function Login() {
     e.preventDefault();
     setError('');
     try {
-      const response = await fetch('http://localhost:8080/login', {
+      const response = await fetch('https://finora-backend-na5s.onrender.com/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -18,7 +18,7 @@ function Login() {
       if (response.ok) {
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem("userEmail", email);
-        window.location.href = `http://localhost:3001/auth-success?email=${encodeURIComponent(email)}`;   
+        window.location.href = `https://finora-dashboard-df9l.onrender.com?auth=true&email=${encodeURIComponent(email)}`;   
       } else {
         setError('Invalid email or password');
       }

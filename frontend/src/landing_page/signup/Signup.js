@@ -18,7 +18,7 @@ function Signup() {
         setError('');
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:8080/signup', {
+            const response = await axios.post('https://finora-backend-na5s.onrender.com/signup', {
                 username,
                 email,
                 password
@@ -29,7 +29,7 @@ function Signup() {
                     localStorage.setItem("user", JSON.stringify(response.data.user));
                     localStorage.setItem("isAuthenticated", "true");
                 }
-                window.location.href = `http://localhost:3001/?email=${encodeURIComponent(email)}`;
+                window.location.href = `https://finora-dashboard-df9l.onrender.com?auth=true&email=${encodeURIComponent(email)}`;
                 setUsername('');
                 setEmail('');
                 setPassword('');

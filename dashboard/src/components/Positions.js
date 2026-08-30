@@ -8,7 +8,7 @@ const Positions = () => {
   const [allPositions, setAllPositions] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8080/allPositions").then((res) => {
+    axios.get("https://finora-backend-na5s.onrender.com/allPositions").then((res) => {
       console.log(res.data);
       setAllPositions(res.data);
     })

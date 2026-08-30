@@ -16,7 +16,15 @@ const Menu = () => {
 
   const [userEmail, setUserEmail] = useState("hello@finora.com");
   useEffect(() => {
-    const storedEmail  = localStorage.getItem("userEmail");
+    let storedEmail  = localStorage.getItem("userEmail");
+    if(!storedEmail){
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlEmail = urlParams.get("email");
+      if(urlEmail){
+        storedEmail = urlEmail;
+        localStorage.setItem("userEmail", urlEmail);
+      }
+    }
     if(storedEmail){
       setUserEmail(storedEmail);
     }
@@ -39,7 +47,7 @@ const Menu = () => {
     localStorage.removeItem("isAuthenticated");
     localStorage.removeItem("user");
     localStorage.removeItem("userEmail");
-    window.location.href = "http://localhost:3000/";
+    window.location.href = "https://finora-frontend-33rx.onrender.com";
   };
 
   const menuClass = "menu";

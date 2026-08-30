@@ -9,7 +9,7 @@ const Holdings = () => {
   const [allHoldings, setAllHoldings] = useState([]);
 
   useEffect(()=> { 
-    axios.get("http://localhost:8080/allHoldings").then((res)=>{
+    axios.get("https://finora-backend-na5s.onrender.com/allHoldings").then((res)=>{
       console.log(res.data);
       setAllHoldings(res.data);
     });

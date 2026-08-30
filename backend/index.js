@@ -17,8 +17,10 @@ const uri = process.env.MONGO_URL;
 const app = express();
 
 app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:3001"],
-  credentials: true
+  origin: ["https://finora-frontend-33rx.onrender.com", "https://finora-dashboard-df9l.onrender.com"],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(bodyParser.json());
 
@@ -235,7 +237,6 @@ app.post("/signup", async (req, res) => {
             password: hashedPassword
         });
         await newUser.save();
-
         res.status(201).json({ 
           success: true, 
           message: "Account created successfully!",
@@ -255,20 +256,14 @@ app.post("/signup", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // 1. Find the user in the database using UserModel
     const user = await UserModel.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
-
-    // 2. Compare the typed password with the hashed password in the DB
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
-
-    // 3. If credentials match, return success status
     res.status(200).json({ 
       message: "Login successful", 
       user: { username: user.username, email: user.email } 

@@ -7,30 +7,29 @@ const Home = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const authQuery = urlParams.get("auth");
+    const emailQuery = urlParams.get("email");
 
     console.log("Auth query:", authQuery);
     console.log("Before auth:", localStorage.getItem("isAuthenticated"));
 
-    if (authQuery === "success") {
+    if (authQuery === "true") {
       localStorage.setItem("isAuthenticated", "true");
-
       console.log(
         "After setting auth:",
         localStorage.getItem("isAuthenticated"),
       );
-
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          username: "Trader",
-          email: "demo@finora.com",
-        }),
-      );
-
-      window.history.replaceState({}, document.title, window.location.pathname);
-
-      return;
+      if(emailQuery){
+        localStorage.setItem("userEmail", decodeURIComponent(emailQuery));
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            username: "Trader",
+            email: decodeURIComponent(emailQuery),
+          }),
+        );
+      }
     }
+    window.history.replaceState({}, document.title, window.location.pathname);
 
     const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
 
@@ -38,7 +37,7 @@ const Home = () => {
 
     if (!isAuthenticated) {
       console.log("REDIRECTING TO LOGIN");
-      window.location.href = "http://localhost:3000/login";
+      window.location.href = "https://finora-frontend-33rx.onrender.com";
     }
   }, []);
 

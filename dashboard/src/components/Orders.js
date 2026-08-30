@@ -5,7 +5,7 @@ const Orders = () => {
   const [allOrders, setAllOrders] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/allOrders")
+    fetch("https://finora-backend-na5s.onrender.com/allOrders")
       .then((res) => res.json())
       .then((data) => setAllOrders(data))
       .catch((err) => console.error("Error fetching orders:", err));
