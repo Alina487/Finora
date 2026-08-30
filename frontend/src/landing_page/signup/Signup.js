@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function Signup() {
-    // 1. Manage state fields for controlled inputs
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -12,7 +11,6 @@ function Signup() {
     
     const navigate = useNavigate();
 
-    // 2. Network post request handler
     const handleSignup = async (e) => {
         e.preventDefault();
         setError('');
@@ -25,11 +23,13 @@ function Signup() {
             }, { withCredentials: true });
 
             if (response.status === 200 || response.status === 201) {
-                if(response.data && response.data.user){
+                if(response.data && response.data.token){
                     localStorage.setItem("user", JSON.stringify(response.data.user));
                     localStorage.setItem("isAuthenticated", "true");
+                    localStorage.setItem("token", response.data.token);
+                    localStorage.setItem("userEmail", email);
                 }
-                window.location.href = `https://finora-dashboard-df9l.onrender.com?auth=true&email=${encodeURIComponent(email)}`;
+                window.location.href = `https://finora-dashboard-df9l.onrender.com?auth=true&token=${response.data.token}`;
                 setUsername('');
                 setEmail('');
                 setPassword('');
@@ -90,7 +90,6 @@ function Signup() {
                 </button>
             </form>
 
-            {/* Error Message Box */}
             {error && (
                 <div className="alert alert-danger mt-3 py-2 fs-7 text-start" role="alert">
                     {error}

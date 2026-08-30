@@ -16,9 +16,11 @@ function Login() {
       });
 
       if (response.ok) {
+        const data = await response.json();
         localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem("userEmail", email);
-        window.location.href = `https://finora-dashboard-df9l.onrender.com?auth=true&email=${encodeURIComponent(email)}`;   
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("email", email);
+        window.location.href = `https://finora-dashboard-df9l.onrender.com?auth=true&token=${data.token}`;   
       } else {
         setError('Invalid email or password');
       }

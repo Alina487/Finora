@@ -4,6 +4,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const jwt = require('jsonwebtoken');
 
 const { HoldingsModel } = require("./model/HoldingsModel");
 const { PositionsModel } = require("./model/PositionsModel");
@@ -191,6 +192,10 @@ app.use(bodyParser.json());
   res.send("Done");
 });*/
 
+app.get('/', (req, res)=>{
+  res.send('Finora Backend API Server is running successfully!');
+})
+
 app.get('/allHoldings', async(req,res) => {
     let allHoldings = await HoldingsModel.find({});
     res.json(allHoldings);
@@ -207,15 +212,24 @@ app.get('/allOrders', async(req, res)=>{
 });
 
 app.post("/newOrder", async(req, res)=>{
-  let newOrder = new OrdersModel({
-    name: req.body.name,
-    qty: req.body.qty,
-    price: req.body.price,
-    mode: req.body.mode,
-  });
-  newOrder.save();
-
-  res.send("Order Saved");
+  try{
+    const newOrder = new OrdersModel({
+      name: req.body.name,
+      qty: req.body.qty,
+      price: req.body.price,
+      mode: req.body.mode,
+    });
+    await newOrder.save();
+    res.status(201).json({
+      message: "Order created successfully",
+      order: newOrder
+    });
+  } catch(error){
+    res.status(500).json({
+      message: "Error creating order",
+      error: error.message
+    });
+  }
 });
 
 app.post("/signup", async (req, res) => {
@@ -237,9 +251,15 @@ app.post("/signup", async (req, res) => {
             password: hashedPassword
         });
         await newUser.save();
+        const token = jwt.sign(
+          { email: newUser.email },
+          "FINORA_SECRET_KEY_2026",
+          { expiresIn: "1d"}
+        );
         res.status(201).json({ 
           success: true, 
           message: "Account created successfully!",
+          token: token,
           user: {
             id: newUser._id,
             username: newUser.username,
@@ -264,8 +284,14 @@ app.post("/login", async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
+    const token = jwt.sign(
+      { email: user.email },
+      "FINORA_SECRET_KEY_2026",
+      { expiresIn: "1d"}
+    );
     res.status(200).json({ 
-      message: "Login successful", 
+      message: "Login successful",
+      token: token, 
       user: { username: user.username, email: user.email } 
     });
 

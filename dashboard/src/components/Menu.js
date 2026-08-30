@@ -16,18 +16,17 @@ const Menu = () => {
 
   const [userEmail, setUserEmail] = useState("hello@finora.com");
   useEffect(() => {
-    let storedEmail  = localStorage.getItem("userEmail");
-    if(!storedEmail){
-      const urlParams = new URLSearchParams(window.location.search);
-      const urlEmail = urlParams.get("email");
-      if(urlEmail){
-        storedEmail = urlEmail;
-        localStorage.setItem("userEmail", urlEmail);
+    const updateEmail = () => {
+      const storedEmail = localStorage.getItem("userEmail");
+      if (storedEmail) {
+        setUserEmail(storedEmail);
       }
-    }
-    if(storedEmail){
-      setUserEmail(storedEmail);
-    }
+    };
+    updateEmail();
+    window.addEventListener("userEmailUpdated", updateEmail);
+    return () => {
+      window.removeEventListener("userEmailUpdated", updateEmail);
+    };
   }, []);
 
   const handleMenuClick = (index) => {
@@ -47,6 +46,7 @@ const Menu = () => {
     localStorage.removeItem("isAuthenticated");
     localStorage.removeItem("user");
     localStorage.removeItem("userEmail");
+    localStorage.removeItem("token");
     window.location.href = "https://finora-frontend-33rx.onrender.com";
   };
 
@@ -131,7 +131,7 @@ const Menu = () => {
           onClick={handleProfileClick}
           style={{ cursor: "pointer" }}
         >
-          <div className="avatar">ZU</div>
+          <div className="avatar">FU</div>
           <p className="username">USERID</p>
         </div>
 
@@ -156,8 +156,8 @@ const Menu = () => {
                 boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
                 border: "1px solid #eee",
                 borderRadius: "4px",
-              }
-            }
+              },
+            },
           }}
         >
           <Box sx={{ px: 2, py: 1.5 }}>

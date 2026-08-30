@@ -7,26 +7,32 @@ const Home = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const authQuery = urlParams.get("auth");
-    const emailQuery = urlParams.get("email");
-
+    const tokenQuery = urlParams.get("token");
     console.log("Auth query:", authQuery);
-    console.log("Before auth:", localStorage.getItem("isAuthenticated"));
-
     if (authQuery === "true") {
       localStorage.setItem("isAuthenticated", "true");
-      console.log(
-        "After setting auth:",
-        localStorage.getItem("isAuthenticated"),
-      );
-      if(emailQuery){
-        localStorage.setItem("userEmail", decodeURIComponent(emailQuery));
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            username: "Trader",
-            email: decodeURIComponent(emailQuery),
-          }),
-        );
+      if(tokenQuery){
+        try{
+          const base64Url = tokenQuery.split('.')[1];
+          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+          const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c){
+            return '%'+ ('0' + c.charCodeAt(0).toString(16)).slice(-2);
+          }).join(''));
+          const decoded = JSON.parse(jsonPayload);
+          const realEmail = decoded.email;
+          localStorage.setItem("userEmail", realEmail);
+          window.dispatchEvent(new Event("userEmailUpdated"));
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              username: "Trader",
+              email: realEmail,
+            })
+          );
+          console.log("Successfully stored sync user:", realEmail);
+        } catch(error) {
+          console.error("Failed to parse secure login authentication token:", error);
+        }
       }
     }
     window.history.replaceState({}, document.title, window.location.pathname);
