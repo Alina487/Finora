@@ -6,9 +6,9 @@ A high-performance, full-stack web application replicating the core features and
 
 The project is split into independent microservices fully deployed on *Render*:
 
-*   * Main Web Application (Frontend):* [YOUR_FRONTEND_RENDER_URL]
-*   * Trading Dashboard Client:* [YOUR_DASHBOARD_RENDER_URL]
-*   * Core API Server (Backend):* [YOUR_BACKEND_RENDER_URL]
+*   * Main Web Application (Frontend):* [https://finora-frontend-33rx.onrender.com]
+*   * Trading Dashboard Client:* [https://finora-dashboard-df9l.onrender.com]
+*   * Core API Server (Backend):* [https://finora-backend-na5s.onrender.com]
 
 ---
 
@@ -46,7 +46,7 @@ Finora/
 
 1. *Clone & Install Dependencies:*
    ```bash
-   git clone https://github.com
+   git clone https://github.com/Alina487/Finora
    cd Finora
    # Run 'npm install' inside /frontend, /dashboard, and /backend folders
    ```
